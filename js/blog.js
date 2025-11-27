@@ -2,9 +2,30 @@
 const TELEGRAM_CHANNEL = 'mgkeit';
 const TELEGRAM_CHANNEL_URL = `https://t.me/${TELEGRAM_CHANNEL}`;
 
+// Функция для нормализации даты (приведение к Date объекту)
+function parseDate(dateString) {
+    if (!dateString) return new Date(0); // Если даты нет, возвращаем старую дату
+    
+    // Пробуем разные форматы дат
+    let date = new Date(dateString);
+    
+    // Если парсинг не удался, пробуем другие форматы
+    if (isNaN(date.getTime())) {
+        // Пробуем формат ISO без времени
+        date = new Date(dateString + 'T00:00:00');
+    }
+    
+    // Если все еще не удалось, возвращаем текущую дату
+    if (isNaN(date.getTime())) {
+        date = new Date();
+    }
+    
+    return date;
+}
+
 // Функция для форматирования даты
 function formatDate(dateString) {
-    const date = new Date(dateString);
+    const date = parseDate(dateString);
     const options = { 
         year: 'numeric', 
         month: 'long', 
@@ -78,7 +99,19 @@ async function fetchSingleRSS(rssUrl) {
             let mediaFromDesc = '';
             if (description) {
                 const imgMatch = description.match(/<img[^>]+src=["']([^"']+)["']/i);
-                if (imgMatch) mediaFromDesc = imgMatch[1];
+                if (imgMatch) {
+                    mediaFromDesc = imgMatch[1];
+                    // Улучшаем качество для Telegram изображений
+                    if (mediaFromDesc.includes('cdn.telegram.org')) {
+                        mediaFromDesc = mediaFromDesc.split('?')[0];
+                    }
+                }
+            }
+            
+            // Улучшаем качество основного медиа
+            let finalMedia = media || mediaFromDesc;
+            if (finalMedia && finalMedia.includes('cdn.telegram.org')) {
+                finalMedia = finalMedia.split('?')[0];
             }
             
             return {
@@ -86,7 +119,7 @@ async function fetchSingleRSS(rssUrl) {
                 text: cleanHtml(description || title),
                 date: pubDate,
                 link: link,
-                media: media || mediaFromDesc
+                media: finalMedia
             };
         });
     } catch (e) {
@@ -171,13 +204,28 @@ async function fetchSingleProxy(proxyUrl) {
             let media = '';
             const mediaElement = element.querySelector('.tgme_widget_message_photo_wrap, .tgme_widget_message_video_wrap');
             if (mediaElement) {
-                const style = mediaElement.getAttribute('style') || '';
-                const urlMatch = style.match(/url\(['"]?([^'"]+)['"]?\)/);
-                if (urlMatch) {
-                    media = urlMatch[1];
-                } else {
-                    const img = mediaElement.querySelector('img');
-                    if (img) media = img.getAttribute('src') || img.getAttribute('data-src') || '';
+                // Сначала пробуем получить из data-src или src (более качественные версии)
+                const img = mediaElement.querySelector('img');
+                if (img) {
+                    // Пробуем получить оригинальное изображение
+                    media = img.getAttribute('data-src') || img.getAttribute('src') || '';
+                    // Если это Telegram CDN, убираем параметры размера для получения оригинала
+                    if (media && media.includes('cdn.telegram.org')) {
+                        media = media.split('?')[0];
+                    }
+                }
+                
+                // Если не нашли через img, пробуем из style
+                if (!media) {
+                    const style = mediaElement.getAttribute('style') || '';
+                    const urlMatch = style.match(/url\(['"]?([^'"]+)['"]?\)/);
+                    if (urlMatch) {
+                        media = urlMatch[1];
+                        // Убираем параметры размера для Telegram изображений
+                        if (media.includes('cdn.telegram.org')) {
+                            media = media.split('?')[0];
+                        }
+                    }
                 }
             }
             
@@ -220,6 +268,16 @@ async function fetchPostsFromTelegramWeb() {
     return null;
 }
 
+// Функция для сортировки постов по дате (свежие сверху)
+function sortPostsByDate(posts) {
+    return posts.sort((a, b) => {
+        const dateA = parseDate(a.date).getTime();
+        const dateB = parseDate(b.date).getTime();
+        // Сортируем по убыванию (новые сверху)
+        return dateB - dateA;
+    });
+}
+
 // Функция для отображения постов (оптимизированная)
 function displayPosts(posts) {
     const container = document.getElementById('posts-container');
@@ -235,17 +293,30 @@ function displayPosts(posts) {
     loading.style.display = 'none';
     errorMessage.style.display = 'none';
     
+    // Сортируем посты по дате (свежие сверху)
+    const sortedPosts = sortPostsByDate([...posts]);
+    
     // Используем DocumentFragment для быстрой вставки
     const fragment = document.createDocumentFragment();
     
-    posts.forEach(post => {
+    sortedPosts.forEach(post => {
         const postElement = document.createElement('div');
         postElement.className = 'blog-post';
         
         let mediaHtml = '';
         if (post.media) {
+            // Улучшаем качество изображения для Telegram
+            let imageUrl = post.media;
+            // Если это Telegram изображение, пробуем получить версию лучшего качества
+            if (imageUrl.includes('cdn.telegram.org')) {
+                // Убираем параметры размера для получения оригинала
+                imageUrl = imageUrl.split('?')[0];
+                // Добавляем параметр для лучшего качества
+                imageUrl += '?size=large';
+            }
+            
             mediaHtml = `<div class="post-media">
-                <img src="${post.media}" alt="Изображение поста" loading="lazy" onerror="this.style.display='none'">
+                <img src="${imageUrl}" alt="Изображение поста" loading="lazy" decoding="async" onerror="this.style.display='none'">
             </div>`;
         }
         
