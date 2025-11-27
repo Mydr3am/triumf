@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style/reset.css">
+    <link rel="stylesheet" href="style/style.css">
+    <title>Блог - Клуб единоборств ТРИУМФ</title>
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <div class="logo-section">
+                <div class="logotip">
+                    <a href="main.html">
+                        <img class="logo" src="img/logo.png" alt="Логотип клуба единоборств ТРИУМФ">
+                    </a>
+                </div>
+            </div>
+            <div class="nav-items">
+                <div class="nav-item" onclick="window.location.href='main.html'">Кто мы?</div>
+                <div class="nav-item">Цены</div>
+                <div class="nav-item" onclick="window.location.href='blog.html'">Блог</div>
+                <div class="nav-item">Контакты</div>
+            </div>
+            <div class="sing">
+                <button class="sing-btn">Записаться на тренировку!</button>
+            </div>
+            <div class="nav-right">
+                <div class="login">
+                    <span class="login-link">Вход</span>
+                    <span class="login-separator">|</span>
+                    <span class="login-link">Регистрация</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+    
+    <main>
+        <section class="blog-section">
+            <div class="title-line-top"></div>
+            <h2 class="section-title">Блог МГКЭИТ</h2>
+            <div class="blog-description">
+                <p>Последние новости и обновления из Telegram канала МГКЭИТ</p>
+            </div>
+            
+            <div class="blog-container">
+                <div id="loading" class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Загрузка постов...</p>
+                </div>
+                <div id="error-message" class="error-message" style="display: none;">
+                    <p>Не удалось загрузить посты. Попробуйте обновить страницу.</p>
+                </div>
+                <div id="posts-container" class="posts-container"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-line"></div>
+        <div class="footer-container">
+            <div class="footer-contacts">
+                <div class="contact-item">8 (915) 228-13-37</div>
+                <div class="contact-item">info@triumf-fight.ru</div>
+            </div>
+            <div class="footer-nav">
+                <div class="footer-nav-item">Направления</div>
+                <div class="footer-nav-item">О компании</div>
+                <div class="footer-nav-item">Контакты</div>
+            </div>
+            <div class="footer-cta">
+                <button class="footer-btn">Записаться на тренировку!</button>
+            </div>
+        </div>
+        <div class="footer-copyright">2025 TRIUMF</div>
+    </footer>
+
+    <script src="js/blog.js"></script>
+</body>
+</html>
+

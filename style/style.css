@@ -551,3 +551,265 @@ footer {
     }
 }
 
+/* BLOG SECTION */
+.blog-section {
+    width: 100%;
+    background: transparent;
+    padding: 100px 201px 80px;
+    margin: 0;
+    min-height: calc(100vh - 81px);
+}
+
+.blog-description {
+    text-align: center;
+    margin-bottom: 60px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 16px;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+}
+
+.blog-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    color: #FFFFFF;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-top-color: #FF0000;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading p {
+    font-size: 16px;
+    font-family: "Inter", sans-serif;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.error-message {
+    text-align: center;
+    padding: 60px 20px;
+    color: #FFFFFF;
+    background: rgba(255, 0, 0, 0.1);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+.error-message p {
+    font-size: 16px;
+    font-family: "Inter", sans-serif;
+    margin-bottom: 20px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.telegram-link {
+    display: inline-block;
+    padding: 12px 24px;
+    background: linear-gradient(90deg, #003CFF, #FF0000);
+    color: #FFFFFF;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: "Inter", sans-serif;
+    transition: transform 0.2s, opacity 0.2s;
+    margin-top: 10px;
+}
+
+.telegram-link:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+.posts-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.blog-post {
+    background: #1a1a1a;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.blog-post:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(255, 0, 0, 0.2);
+    border-color: rgba(255, 0, 0, 0.3);
+}
+
+.post-media {
+    width: 100%;
+    max-height: 400px;
+    overflow: hidden;
+    background: #000000;
+}
+
+.post-media img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+    transition: opacity 0.3s;
+}
+
+.post-media img[loading="lazy"] {
+    opacity: 0;
+    animation: fadeIn 0.3s ease-in forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+.post-content {
+    padding: 30px;
+}
+
+.post-text {
+    color: #FFFFFF;
+    font-size: 16px;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    word-wrap: break-word;
+}
+
+.post-text p {
+    margin-bottom: 15px;
+}
+
+.post-text a {
+    color: #003CFF;
+    text-decoration: underline;
+    transition: color 0.3s;
+}
+
+.post-text a:hover {
+    color: #FF0000;
+}
+
+.post-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.post-date {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+}
+
+.post-link {
+    color: #FFFFFF;
+    font-size: 14px;
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 8px 16px;
+    background: linear-gradient(90deg, #003CFF, #FF0000);
+    border-radius: 6px;
+    transition: transform 0.2s, opacity 0.2s;
+    white-space: nowrap;
+}
+
+.post-link:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+/* Responsive для блога */
+@media (max-width: 1024px) {
+    .blog-section {
+        padding: 100px 100px 80px;
+    }
+    
+    .post-footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .post-link {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .blog-section {
+        padding: 100px 20px 80px;
+    }
+    
+    .post-content {
+        padding: 20px;
+    }
+    
+    .post-text {
+        font-size: 14px;
+    }
+}
+
+.widget-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.telegram-widget-container {
+    width: 100%;
+    min-height: 400px;
+    background: #1a1a1a;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.telegram-fallback {
+    background: #1a1a1a;
+    border-radius: 12px;
+    padding: 60px 40px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+
+.fallback-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+
+.telegram-fallback code {
+    font-family: 'Courier New', monospace;
+    color: #FFFFFF;
+    word-break: break-all;
+}
+
